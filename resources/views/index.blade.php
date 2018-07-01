@@ -8,7 +8,12 @@
             </div>
 
             <div class="links" style="padding-left: 25px">
-                <h3>Select a file with currencies (JSON format)</h3>
+                <div class="row" style="margin-bottom: 200px;">
+                    <div class="col"><a href="currencies/currencies.json" download="currencies/currencies.json">currencies.json</a></div>
+                    <div class="col"><a href="currencies/currencies.csv" download="currencies/currencies.csv">currencies.csv</a></div>
+                    <div class="col"><a href="currencies/currencies.xml" download="currencies/currencies.xml">currencies.xml</a></div>
+                </div>
+                <h3>Select a file with currencies (json, csv, xml)!</h3>
                 <div class="form-group form-inline">
                     <input class="form-control input-file" type="file" id="file">
                     <button style="margin-left: 50px;" id="btn-file" class="btn btn-dark">Upload</button>
@@ -47,7 +52,6 @@
                     success: function(result) {
                         $('#file').val('');
                         $('#file-data-block').html(result);
-                        console.log(result.html);
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
                         alert(xhr.status);
@@ -62,11 +66,11 @@
 
         });
 
-        var filesExt = ['json'];
+        var filesExt = ['json', 'csv', 'xml'];
         $('input[type=file]').change(function(){
             var parts = $(this).val().split('.');
             if(!(filesExt.join().search(parts[parts.length - 1]) != -1)){
-                alert('Select only json file!');
+                alert('Allowed file types: json, csv, xml');
             }
 
         });

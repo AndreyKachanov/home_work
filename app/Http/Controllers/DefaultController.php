@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App;
 
 
 class DefaultController extends Controller
@@ -21,20 +22,29 @@ class DefaultController extends Controller
      */
     public function uploadAction(Request $request)
     {
-        $file = $request->file('file');
-
+        $originalFile = $request->file('file');
         $ext = ['json', 'xml', 'csv'];
 
-        if ($file && in_array($file->getClientOriginalExtension(), $ext)) {
-            $fileName = md5(uniqid()) . '.' . $file->getClientOriginalExtension();
-            $path = storage_path() . '/json/';
-            $file->move($path, $fileName);
+        if ($originalFile && in_array($originalFile->getClientOriginalExtension(), $ext)) {
 
-            $json = json_decode(file_get_contents($path . $fileName), true);
 
+            // get file handler
+            $fileHandler = App::makeWith('App\Helpers\Contracts\currencyFiles', [
+                'file' => $originalFile
+            ]);
+
+            // save user file to database and in directory
+            $fileHandler->saveCurrentFile();
+
+            // get data from user file
+            $uploadedData = $fileHandler->getCurrentData();
+
+            // updated user data and create new file
+            $updatedFile = $fileHandler->updateData();
 
             return view('jsonTable', [
-                'data' => $json
+                'uploadedData' => $uploadedData,
+                'updatedFile' => $updatedFile
             ]);
 
         } else {
