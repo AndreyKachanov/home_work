@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-8" standalone="yes" ?>
+<CURRENCIES>
+    <LAST_UPDATE>2003-07-29</LAST_UPDATE>
+    <CURRENCY>
+        <NAME>dollar</NAME>
+        <UNIT>1</UNIT>
+        <CURRENCYCODE>USD</CURRENCYCODE>
+        <COUNTRY>USA</COUNTRY>
+        <RATE>4.527</RATE>
+        <CHANGE>0.044</CHANGE>
+    </CURRENCY>
+</CURRENCIES>
