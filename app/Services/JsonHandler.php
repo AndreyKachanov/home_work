@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Services;
 
-use App\Helpers\Contracts\currencyFiles;
+use App\Services\Contracts\CurrencyFiles;
 use App\File;
 
-class jsonHandler implements currencyFiles
+class JsonHandler implements CurrencyFiles
 {
     private $originalFile;
 

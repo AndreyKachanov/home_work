@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Helpers\Contracts;
+namespace App\Services\Contracts;
 
-Interface currencyFiles {
+Interface CurrencyFiles {
 
     public function saveCurrentFile();
 

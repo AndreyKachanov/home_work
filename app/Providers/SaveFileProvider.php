@@ -9,9 +9,9 @@
 namespace App\Providers;
 
 
-use App\Helpers\csvHandler;
-use App\Helpers\jsonHandler;
-use App\Helpers\xmlHandler;
+use App\Services\CsvHandler;
+use App\Services\JsonHandler;
+use App\Services\XmlHandler;
 use Illuminate\Support\ServiceProvider;
 
 class SaveFileProvider extends ServiceProvider
@@ -34,7 +34,7 @@ class SaveFileProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Helpers\Contracts\currencyFiles', function ($app, $params) {
+        $this->app->bind('App\Contracts\CurrencyFiles', function ($app, $params) {
 
             $originalFile = $params['file'];
             $ext = $originalFile->getClientOriginalExtension();
@@ -42,12 +42,12 @@ class SaveFileProvider extends ServiceProvider
             // check file extention and get handler
             switch ($ext) {
                 case 'json':
-                    return new jsonHandler($originalFile);
+                    return new JsonHandler($originalFile);
                     break;
                 case 'csv':
-                    return new csvHandler($originalFile);
+                    return new CsvHandler($originalFile);
                     break;
-                case 'xml': return new xmlHandler($originalFile); break;
+                case 'xml': return new XmlHandler($originalFile); break;
                 default:
                     return false;
             }

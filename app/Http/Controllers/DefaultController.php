@@ -29,7 +29,7 @@ class DefaultController extends Controller
 
 
             // get file handler
-            $fileHandler = App::makeWith('App\Helpers\Contracts\currencyFiles', [
+            $fileHandler = App::makeWith('App\Contracts\CurrencyFiles', [
                 'file' => $originalFile
             ]);
 
