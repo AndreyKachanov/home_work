@@ -26,9 +26,35 @@ class xmlHandler implements CurrencyFiles
     }
 
     /**
+     * check structure json file
+     *
+     * @return bool
+     */
+    public function checkStructure()
+    {
+        if ($this->getCurrentData() === false) {
+            return false;
+        }
+        $uploadedData = $this->getCurrentData();
+        $required = ['last_update', 'currency'];
+        $requiredCurrency = ['name', 'unit', 'currencycode', 'country', 'rate', 'change'];
+
+        if ($this->checkArrayKeys($required, $uploadedData)) {
+            foreach ($uploadedData['currency'] as $item) {
+                if ($this->checkArrayKeys($requiredCurrency, $item) === false) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @param $file
      */
-    function saveCurrentFile()
+    public function saveCurrentFile()
     {
         // write a file to directory
 
@@ -48,7 +74,11 @@ class xmlHandler implements CurrencyFiles
         $file = config('app.files_path') . $this->fileName;
         $xmlFile = file_get_contents($file);
 
-        $ob = simplexml_load_string($xmlFile);
+        try {
+            $ob = simplexml_load_string($xmlFile);
+        } catch (\Exception $e) {
+            return false;
+        }
         $json  = json_encode($ob);
         $jsonDecode = json_decode($json, true);
 
@@ -89,6 +119,27 @@ class xmlHandler implements CurrencyFiles
     }
 
     /**
+     * SimpleXml method
+     * @return string
+     */
+//    public function updateData()
+//    {
+//        date_default_timezone_set('Europe/Kiev');
+//        $data = $this->getCurrentData();
+//
+//        $newData = CurrencyService::updateCurrencyRate($data, $caseLower = true);
+//        // file name
+//        $newFileName = 'currency_' . date('Y_m_d_H_i_s') . '.xml';
+//
+//        // full file name
+//        $newFilePath = config('app.files_path_new') . $newFileName;
+/*        $xml_data = new \SimpleXMLElement('<?xml version="1.0"?><CURRENCIES></CURRENCIES>');*/
+//        $this->arrayToXmlSimple($newData, $xml_data);
+//        $xml_data->asXML($newFilePath);
+//        return $newFileName;
+//    }
+
+    /**
      * Converts an array to XML
      *
      * @param \XMLWriter $xml
@@ -110,5 +161,34 @@ class xmlHandler implements CurrencyFiles
                 $xml->writeElement(strtoupper($key), $value);
             }
         }
+    }
+
+    /**
+     * @param $data
+     * @param $xml_data
+     */
+    private function arrayToXmlSimple( $data, &$xml_data ) {
+        foreach( $data as $key => $value ) {
+            if( is_numeric($key) ){
+                $key = 'item'.$key;
+            }
+            if( is_array($value) ) {
+                $subnode = $xml_data->addChild($key);
+                $this->arrayToXmlSimple($value, $subnode);
+            }
+            else {
+                $xml_data->addChild("$key", htmlspecialchars("$value"));
+            }
+        }
+    }
+
+    /**
+     * @param $required
+     * @param $arr
+     * @return bool
+     */
+    private function checkArrayKeys($required, $arr)
+    {
+        return (count(array_intersect_key(array_flip($required), $arr)) === count($required));
     }
 }

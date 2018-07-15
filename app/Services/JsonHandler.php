@@ -18,9 +18,32 @@ class JsonHandler implements CurrencyFiles
     }
 
     /**
+     * check structure json file
+     *
+     * @return bool
+     */
+    public function checkStructure()
+    {
+        $uploadedData = $this->getCurrentData();
+        $required = ['last_update', 'currency'];
+        $requiredCurrency = ['name', 'unit', 'currencycode', 'country', 'rate', 'change'];
+
+        if ($this->checkArrayKeys($required, $uploadedData)) {
+            foreach ($uploadedData['currency'] as $item) {
+                if ($this->checkArrayKeys($requiredCurrency, $item) === false) {
+                   return false;
+                }
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @param $file
      */
-     function saveCurrentFile()
+     public function saveCurrentFile()
     {
         // write a file to directory
 
@@ -33,7 +56,7 @@ class JsonHandler implements CurrencyFiles
     }
 
     /**
-     * @param $file
+     * @return mixed
      */
     public function getCurrentData()
     {
@@ -59,5 +82,15 @@ class JsonHandler implements CurrencyFiles
         fclose($file);
 
         return $newFileName;
+    }
+
+    /**
+     * @param $required
+     * @param $arr
+     * @return bool
+     */
+    private function checkArrayKeys($required, $arr)
+    {
+        return (count(array_intersect_key(array_flip($required), $arr)) === count($required));
     }
 }

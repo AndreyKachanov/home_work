@@ -24,9 +24,29 @@ class csvHandler implements CurrencyFiles
     }
 
     /**
+     * check structure csv file
+     *
+     * @return bool
+     */
+    public function checkStructure()
+    {
+        $uploadedData = $this->getCurrentData();
+
+        $required = ['name', 'unit', 'currencycode', 'country', 'rate', 'change', 'last_update'];
+
+        foreach ($uploadedData['currency'] as $item) {
+            if ($this->checkArrayKeys($required, $item) === false) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * @param $file
      */
-    function saveCurrentFile()
+    public function saveCurrentFile()
     {
         // write a file to directory
 
@@ -96,5 +116,15 @@ class csvHandler implements CurrencyFiles
 //        })->save('csv', $newFilePath );
 
         return $fileName;
+    }
+
+    /**
+     * @param $required
+     * @param $arr
+     * @return bool
+     */
+    private function checkArrayKeys($required, $arr)
+    {
+        return (count(array_intersect_key(array_flip($required), $arr)) === count($required));
     }
 }

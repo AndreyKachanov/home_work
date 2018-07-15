@@ -50,8 +50,12 @@
                         $('#btn-file').attr('disabled', 'disabled');
                     },
                     success: function(result) {
-                        $('#file').val('');
-                        $('#file-data-block').html(result);
+                        if (result.structure == 'fail') {
+                            alert('Не верная структура файла')
+                        } else {
+                            $('#file').val('');
+                            $('#file-data-block').html(result);
+                        }
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
                         alert(xhr.status);

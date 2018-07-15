@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use function Faker\Provider\pt_BR\check_digit;
 use Illuminate\Http\Request;
 use App;
 
@@ -35,6 +36,11 @@ class DefaultController extends Controller
 
             // save user file to database and in directory
             $fileHandler->saveCurrentFile();
+
+            // check sctucture uploaded file
+            if ($fileHandler->checkStructure() === false) {
+                return response()->json(['structure' => 'fail']);
+            }
 
             // get data from user file
             $uploadedData = $fileHandler->getCurrentData();
